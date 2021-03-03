@@ -1,6 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from config import * # logins credentials are saved in the config file
 from seleniumwire  import webdriver
+import pandas as pd
 import time
 import json
 import csv
@@ -56,14 +57,37 @@ for item in data_last_update:
 	simplified_data.append(item)
 
 
+try:
+	with open('csv_data.csv', 'a') as f:
+		field_names = ['Macd', 'Date']
+		csv_writer = csv.DictWriter(f, fieldnames= field_names)
+		for item in simplified_data:
+			csv_writer.writerow(item)
 
-with open('json_data.json', 'w') as f:
-	json.dump(simplified_data, f, indent = 4)
 
-with open('csv_data.csv', 'w') as f:
-	field_names = ['Macd', 'Date']
-	csv_writer = csv.DictWriter(f, fieldnames= field_names)
-	csv_writer.writeheader()
-	for item in simplified_data:
-		csv_writer.writerow(item)
+except FileNotFoundError:
+	with open('csv_data.csv', 'w') as f:
+		field_names = ['Macd', 'Date']
+		csv_writer = csv.DictWriter(f, fieldnames= field_names)
+		csv_writer.writeheader()
+		for item in simplified_data:
+			csv_writer.writerow(item)
+
+
+# removing the duplicates
+
+with open('csv_data.csv', 'r+') as f:
+	table = pd.read_csv('csv_data.csv')
+	print(table)
+	clean_table = table.drop_duplicates()
+	f.seek(0)
+	clean_table.to_csv('csv_data.csv', index=False)
+    # f.truncate()
+
+# Read the file (considering header by default) and save in variable:
+
+# Drop the duplicates:
+
+# Save clean data:
+
 	
