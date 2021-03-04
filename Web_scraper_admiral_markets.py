@@ -9,6 +9,7 @@ import csv
 path = "https://admiralmarkets.com/analytics/premium-analytics/dashboard?regulator=cysec"
 
 options = webdriver.ChromeOptions()
+options.add_argument("--incognito")
 driver = webdriver.Chrome("chromedriver.exe", options = options)
 driver.get(path)
 time.sleep(2) # to make sure the page is entirely loaded before locating the elements
@@ -20,12 +21,13 @@ email_field.send_keys(Email)
 password_field.send_keys(Password)
 password_field.send_keys(Keys.ENTER)
 
-time.sleep(2) # to make sure the page is entirely loaded before locating the elements
+time.sleep(5) # to make sure the page is entirely loaded before locating the elements
 
 one_time_access_code = input("Please enter the code from your email")
 
 two_step_verification_field = driver.find_element_by_xpath("//input[@data-cy='otp']")
 two_step_verification_field.send_keys(one_time_access_code)
+time.sleep(5)
 two_step_verification_field.send_keys(Keys.ENTER)
 
 
@@ -94,6 +96,6 @@ class AdmiralMarketsScraper: # scraper class
 			clean_table.to_csv('csv_data.csv', index=False)
 
 
-if __name__ == '__main__':
-	EURJPY = AdmiralMarketsScraper('EURJPY')
-	EURJPY.collect_data()
+# if __name__ == '__main__':
+# 	EURJPY = AdmiralMarketsScraper('EURJPY')
+# 	EURJPY.collect_data()
