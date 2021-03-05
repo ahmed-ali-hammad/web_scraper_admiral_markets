@@ -43,6 +43,7 @@ class AdmiralMarketsScraper: # scraper class
 
 	def collect_data(self): # responsible for excuting all the other methods inside the class
 		self.start_search()
+		time.sleep(3)
 		data_last_update = self.get_data()
 		simplified_data = self.simplify_data(data_last_update)
 		self.save_data()
@@ -96,7 +97,7 @@ class AdmiralMarketsScraper: # scraper class
 
 		# removing the duplicates
 		with open(f'{self.currency_pair} MACD & DATE.csv', 'r+') as f:
-			table = pd.read_csv(f'{self.currency_pair} MACD & DATE.csv')
+			table = pd.read_csv(f'{self.currency_pair} MACD & DATE.csv', names = ['Macd', 'Date'])
 			clean_table = table.drop_duplicates()
 			f.seek(0)
 			clean_table.to_csv(f'{self.currency_pair} MACD & DATE.csv', index=False)
