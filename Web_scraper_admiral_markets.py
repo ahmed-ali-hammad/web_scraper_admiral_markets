@@ -5,12 +5,14 @@ import pandas as pd
 import json
 import time
 import csv
+import os
 
 currency_pairs = ['EURJPY', 'EURAUD', 'AUDUSD', 'EURCHF', 'USDJPY', 'EURCAD', 'NZDUSD', 'GBPJPY', 'EURUSD', 'GBPUSD', 'USDCHF', 'USDCAD', 'AUDNZD']
 path = "https://admiralmarkets.com/analytics/premium-analytics/dashboard?regulator=cysec"
 
 options = webdriver.ChromeOptions()
 # options.add_argument("--incognito")
+options.add_argument("--headless")
 driver = webdriver.Chrome("chromedriver.exe", options = options)
 driver.get(path)
 time.sleep(2) # to make sure the page is entirely loaded before locating the elements
@@ -81,23 +83,20 @@ class AdmiralMarketsScraper: # scraper class
 		return self.simplified_data
 
 	def save_data(self): # responsible for saving the data to the csv file
-		try:
-			with open(f'{self.currency_pair} MACD & DATE.csv', 'a') as f:
-				field_names = ['Macd', 'Date']
-				csv_writer = csv.DictWriter(f, fieldnames = field_names)
-				for item in self.simplified_data:
-					csv_writer.writerow(item)
-		except FileNotFoundError:
-			with open(f'{self.currency_pair} MACD & DATE.csv', 'w') as f:
-				field_names = ['Macd', 'Date']
-				csv_writer = csv.DictWriter(f, fieldnames = field_names)
+		with open(f'{self.currency_pair} MACD & DATE.csv', 'a+') as f:
+			f.seek(0, os.SEEK_SET)
+			first_line = f.readline()
+			field_names = ['Macd', 'Date']
+			csv_writer = csv.DictWriter(f, field_names)
+			if 'Macd,Date' not in first_line:
 				csv_writer.writeheader()
-				for item in self.simplified_data:
-					csv_writer.writerow(item)
+			f.seek(0, os.SEEK_END)
+			for item in self.simplified_data:
+				csv_writer.writerow(item)
 
-		# removing the duplicates
+		#removing the duplicates
 		with open(f'{self.currency_pair} MACD & DATE.csv', 'r+') as f:
-			table = pd.read_csv(f'{self.currency_pair} MACD & DATE.csv', names = ['Macd', 'Date'])
+			table = pd.read_csv(f'{self.currency_pair} MACD & DATE.csv')
 			clean_table = table.drop_duplicates()
 			f.seek(0)
 			clean_table.to_csv(f'{self.currency_pair} MACD & DATE.csv', index=False)
@@ -108,3 +107,5 @@ if __name__ == '__main__':
 		currency_pair = AdmiralMarketsScraper(currency)
 		currency_pair.collect_data()
 	print('Data was updated')
+	driver.quit()
+
