@@ -13,7 +13,7 @@ path = "https://admiralmarkets.com/analytics/premium-analytics/dashboard?regulat
 options = webdriver.ChromeOptions()
 # options.add_argument("--incognito")
 options.add_argument("--headless")
-driver = webdriver.Chrome("chromedriver.exe", options = options)
+driver = webdriver.Chrome("/Volumes/Transcend/AdmiralScrapeApp/Web_scraper_admiral_markets/chromedriver", options = options)
 driver.get(path)
 time.sleep(2) # to make sure the page is entirely loaded before locating the elements
 
@@ -31,11 +31,9 @@ two_step_verification_field = driver.find_element_by_xpath("//input[@data-cy='ot
 two_step_verification_field.send_keys(Two_Step_Verification_key)
 two_step_verification_field.send_keys(Keys.ENTER)
 
-time.sleep(5)
+time.sleep(7)
 
-driver.refresh()
 
-time.sleep(5)
 
 class AdmiralMarketsScraper: # scraper class
 	def __init__(self, currency_pair):
@@ -58,7 +56,7 @@ class AdmiralMarketsScraper: # scraper class
 		search_field.send_keys(Keys.ENTER)
 		search_container = driver.find_element_by_xpath("//div[@class='instrument ng-star-inserted']")
 		search_button = search_container.find_element_by_tag_name('a')
-		time.sleep(3) # waiting for the data to load
+		time.sleep(6) # waiting for the data to load
 		search_button.click() 
 
 	def get_data(self): # responsible for collecting the data from the network traffic
