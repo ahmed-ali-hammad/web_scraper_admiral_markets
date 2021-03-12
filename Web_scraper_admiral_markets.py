@@ -13,7 +13,8 @@ path = "https://admiralmarkets.com/analytics/premium-analytics/dashboard?regulat
 options = webdriver.ChromeOptions()
 # options.add_argument("--incognito")
 options.add_argument("--headless")
-driver = webdriver.Chrome("/Volumes/Transcend/AdmiralScrapeApp/Web_scraper_admiral_markets/chromedriver", options = options)
+driver = webdriver.Chrome(executable_path = "/Users/ahmedaly/Desktop/web_scraper_admiral_markets/chromedriver", options = options)
+#driver = webdriver.Chrome("/Volumes/Transcend/AdmiralScrapeApp/Web_scraper_admiral_markets/chromedriver", options = options)
 driver.get(path)
 time.sleep(2) # to make sure the page is entirely loaded before locating the elements
 
@@ -31,9 +32,11 @@ two_step_verification_field = driver.find_element_by_xpath("//input[@data-cy='ot
 two_step_verification_field.send_keys(Two_Step_Verification_key)
 two_step_verification_field.send_keys(Keys.ENTER)
 
-time.sleep(7)
+time.sleep(5)
 
+driver.refresh()
 
+time.sleep(6)
 
 class AdmiralMarketsScraper: # scraper class
 	def __init__(self, currency_pair):
@@ -50,7 +53,7 @@ class AdmiralMarketsScraper: # scraper class
 
 	def start_search(self): # responsibel for starting the search for the given currency pair
 		search_field = driver.find_element_by_xpath("//input[@placeholder='Search instrument']")
-		search_field.send_keys(Keys.CONTROL + "a")
+		search_field.send_keys(Keys.COMMAND + "a")
 		search_field.send_keys(Keys.DELETE)
 		search_field.send_keys(self.currency_pair)
 		search_field.send_keys(Keys.ENTER)
