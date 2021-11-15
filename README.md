@@ -1,6 +1,6 @@
 # web_scraper_admiral_markets
 
-This script is used to scrap admiral markets website and expoert the data to csv files.  
+This script is used to scrap admiral markets website and export the data to csv files.  
   
 The script is supposed to be excuted every few days and the new data is added to the same csv files.
 
